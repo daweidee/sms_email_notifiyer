@@ -13,4 +13,4 @@ CREATE TABLE `email_gateway_send` (
   `update_time` int NOT NULL DEFAULT '0' COMMENT '修改时间戳',
   PRIMARY KEY (`id`),
   KEY `idx_create_time` (`create_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
