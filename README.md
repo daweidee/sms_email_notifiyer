@@ -178,7 +178,7 @@ curl "http://127.0.0.1:8080/email/delivery?to=user@example.com&send_date=2026-03
 
 ```json
 {
-  "api_user": "noreplycoc",
+  "api_user": "noreply",
   "email": "user@example.com",
   "status": 4,
   "status_desc": "Invalid Email"
@@ -294,7 +294,7 @@ curl -X POST "http://127.0.0.1:8080/sms/send" \
 示例（短信查询投递）：
 
 ```text
-time=... level=INFO msg=查询投递记录 api_user=noreplycoc email=futreone@outlook.com status=4 status_desc="Invalid Email"
+time=... level=INFO msg=查询投递记录 api_user=noreply email=example@outlook.com status=4 status_desc="Invalid Email"
 ```
 
 ---
