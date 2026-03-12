@@ -1,29 +1,3 @@
-README 已按当前项目状态更新，修改总结如下：
-
-更新摘要
-开头说明
-
-邮件：改为“按配置的邮件通道（EngageLab SMTP / REST）按优先级发送，失败自动切换下一通道”。
-短信：标明配置项为 sms.engagelab_sms、sms.mxt_sms。
-第 2 节 配置文件
-
-拆成 2.1～2.4 小节。
-2.2 数据库：DSN 示例改为 timeout=10s&loc=Local&parseTime=true&allowOldPasswords=1，并增加 max_conn、max_idle 的说明。
-2.3 邮件：改为 engagelab_smtp / engagelab_rest 的 used 优先级与失败回退说明，去掉旧的 mode、smtp_host、rest 等扁平配置示例。
-2.4 短信：改为 sms.engagelab_sms、sms.mxt_sms 的嵌套示例与 used 说明，去掉顶层 sms/mxt 扁平配置。
-3.1 发送邮件
-
-发送逻辑改为：按邮件通道 used 从高到低依次尝试，并说明发件人来自配置。
-4.2 / 4.3 短信通道
-
-表述改为“当 sms.engagelab_sms / sms.mxt_sms 存在且 used >= 0、配置完整时”，并补充 mxt_sms.needstatus 等说明。
-4.4 多通道与失败重试
-
-统一说明邮件、短信都是“used 降序、失败切下一通道”，并简化短信写入 smsagent_send 的说明。
-当前 README 已与现有 config.yaml（db 含 max_conn/max_idle、email 为 engagelab_smtp/engagelab_rest、sms 为 engagelab_sms/mxt_sms）保持一致。
-
-
-
 # eng_tools 邮件 & 短信服务
 
 `eng_tools` 是一个基于 Go 实现的轻量级邮件 / 短信发送与查询服务，支持：
@@ -100,11 +74,21 @@ email:
     api_user: "noreplycoc"
     from: "noreplycoc@mail.coc.exchange"
     timeout_seconds: 10
+  
+  # 也可以配置其他 SMTP 通道（例如 GoDaddy），字段含义与 engagelab_smtp 一致：
+  # godaddy_smtp:
+  #   used: 1
+  #   host: "smtpout.secureserver.net"
+  #   port: 465
+  #   username: "mail.example.com"
+  #   password: "your_password"
+  #   from: "mail.example.com"
+  #   from_name: "No Reply"
 ```
 
-- 邮件通道：`engagelab_smtp` 与 `engagelab_rest` 可同时配置；**used 数值越大越优先**，先尝试高优先级通道，失败则自动尝试下一通道。
+- 邮件通道：`engagelab_smtp`、`godaddy_smtp`（或其他 SMTP）、`engagelab_rest` 可同时配置；**used 数值越大越优先**，先尝试高优先级通道，失败则自动尝试下一通道。
 - **used: -1** 表示该通道不启用。
-- HTTP 接口 `/email/send` 的默认发件人取自配置（优先 `engagelab_rest.from`，否则 `engagelab_smtp.from`）。
+- HTTP 接口 `/send/email` 的默认发件人取自配置（优先 `engagelab_rest.from`，否则 `engagelab_smtp.from`）。
 
 ### 2.4 短信（多通道，按 used 优先级 + 失败回退）
 
@@ -138,16 +122,16 @@ sms:
 
 ## 3. 邮件发送接口
 
-### 3.1 发送邮件 `/email/send`
+### 3.1 发送邮件 `/send/email`
 
 **请求方法**: `POST`  
-**URL**: `/email/send`  
+**URL**: `/send/email`  
 **用途**: 写入一条 `email_gateway_send` 记录，并立即发送。
 
 请求体示例：
 
 ```bash
-curl -X POST "http://127.0.0.1:8080/email/send" \
+curl -X POST "http://127.0.0.1:8080/send/email" \
   -H "Content-Type: application/json" \
   -d '{
     "to": ["user1@example.com", "user2@example.com"],
