@@ -1,0 +1,79 @@
+log:
+  # 日志等级: debug, info, warn, error
+  level: "info"
+
+server:
+  # 服务绑定的 IP 和端口
+  host: "0.0.0.0"
+  port: 8080
+
+db:
+  # MySQL DSN，可包含 timeout、loc、parseTime、allowOldPasswords 等参数
+  dsn: "root:123456qwer@tcp(127.0.0.1:3306)/tools?timeout=10s&loc=Local&parseTime=true&allowOldPasswords=1"
+  # 连接和连通性检查超时时间（秒），用于启动时 Ping
+  connect_timeout_seconds: 5
+  # 最大打开连接数
+  max_conn: 100
+  # 最大空闲连接数
+  max_idle: 100
+
+email:
+  # used: -1 表示不使用该通道；正整数 1、2… 表示优先级，数值越大越优先；发送失败时按优先级依次尝试下一通道
+  engagelab_smtp:
+    used: -1
+    host: "smtp.engagelab.cc"
+    port: 465
+    username: "smtp_user@example.com"
+    password: "your_smtp_password"
+    # 默认发件人邮箱（可被 email_gateway_send.from 字段覆盖）
+    from: "noreply@example.com"
+    # 发件人显示名称（收件端显示为名称而非邮箱）；可选，不填则只显示邮箱
+    from_name: "No Reply"
+
+  engagelab_rest:
+    used: -1
+    # 例如: https://api.example.com/email/send
+    endpoint: "http://email.api.engagelab.cc/v1/mail/send"
+    api_key: "abcdefghilk"
+    # 调用该 REST 邮件服务的业务方标识
+    api_user: "noreply"
+    # REST 调用默认发件人邮箱（HTTP 接口 from 固定用这里）
+    from: "noreplycoc@mail.example.com"
+    # 发件人显示名称（收件端显示为名称而非邮箱）；可选，不填则只显示邮箱
+    from_name: "No Reply"
+    # 超时时间（秒）
+    timeout_seconds: 10
+
+  godaddy_smtp:
+    used: 1
+    host: "smtpout.secureserver.net"
+    port: 465
+    username: "mail.example.com"
+    password: "abce1234"
+    # 默认发件人邮箱（可被 email_gateway_send.from 字段覆盖）
+    from: "mail.example.com"
+    # 发件人显示名称；可选
+    from_name: "No Reply"
+
+# 短信发送配置（EngageLab SMS API）
+# used: -1 表示跳过不使用；0、1 等非负整数表示使用中，数值大者优先
+# 文档: https://www.engagelab.com/zh_CN/docs/NEWSMS/REST-API/API-SMS-Sending
+sms:
+  engagelab_sms:
+    used: 1
+    endpoint: "https://smsapi.engagelab.com/v1/messages"
+    dev_key: "your_dev_key"
+    dev_secret: "your_dev_secret"
+    timeout_seconds: 15
+    proxy_name: "engagelab"  # 渠道标识，写入 smsagent_send.proxy_name
+
+  mxt_sms:
+    used: 1
+    submit_url: "http://116.62.212.142/msg/HttpSendSM"
+    batch_submit_url: "http://116.62.212.142/msg/HttpBatchSendSM"  # 群发接口，多号码时使用；不填则根据 submit_url 自动推导
+    account: "your_account"
+    pswd: "your_pswd"
+    needstatus: true
+    product: ""
+    timeout_seconds: 15
+    proxy_name: "mxt"
