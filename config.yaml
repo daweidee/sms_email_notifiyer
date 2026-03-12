@@ -38,7 +38,7 @@ email:
     # 调用该 REST 邮件服务的业务方标识
     api_user: "noreply"
     # REST 调用默认发件人邮箱（HTTP 接口 from 固定用这里）
-    from: "noreplycoc@mail.example.com"
+    from: "noreply@mail.example.com"
     # 发件人显示名称（收件端显示为名称而非邮箱）；可选，不填则只显示邮箱
     from_name: "No Reply"
     # 超时时间（秒）
